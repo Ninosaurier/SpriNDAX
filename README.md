@@ -1,4 +1,4 @@
-# SpriNDReX! A fully comprehensive Java, React, Nginx, MongoDb or MySQL Docker container.
+# SpriNDAX! A fully comprehensive Java, React, Nginx, MongoDb or MySQL Docker container.
 
 ## Introduction
 The repo provides a complete React, Spring, Nginx and MongoDb or MySQL environment in Docker.
