@@ -24,6 +24,8 @@ services:
       - ./workDir/logs/:/var/log/nginx/:cached
     ports:
       - "8080:8080"
+    depends_on:
+      - MySQLDB
 # MongoDB:
   #   image: mongo
   #   container_name: mongo_database

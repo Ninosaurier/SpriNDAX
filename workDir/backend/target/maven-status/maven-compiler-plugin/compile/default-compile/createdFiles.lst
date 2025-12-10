@@ -1,1 +1,4 @@
+com/example/cms/article/ArticleRepository.class
 com/example/cms/CmsApplication.class
+com/example/cms/article/ArticleGraphQLController.class
+com/example/cms/article/Article.class
