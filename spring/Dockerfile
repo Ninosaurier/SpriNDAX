@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk add --update openjdk17-jdk
+RUN apk add --update openjdk21
 RUN apk add --update maven
 # CMD ["/bin/bash"]
 

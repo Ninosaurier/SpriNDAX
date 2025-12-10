@@ -4,10 +4,10 @@ RUN mkdir -p /etc/nginx/templates \
     mkdir -p /tmp/nginx
 
 COPY nginx.conf /etc/nginx/
-COPY react.conf /etc/nginx/conf.d/
+COPY angular.conf /etc/nginx/conf.d/
 COPY spring.conf /etc/nginx/conf.d/
 #COPY templates/* /etc/nginx/templates/
-COPY services/* /etc/systemd
+#COPY services/* /etc/systemd
 COPY html/index.html.template /tmp/nginx/
 
 RUN envsubst < /tmp/nginx/index.html.template > /usr/share/nginx/html/index.html; \

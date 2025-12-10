@@ -1,18 +1,17 @@
-version: '3.9'
 services:
-  react:
+  angular:
     stdin_open: true
-    container_name: react
-    build: ./react
+    container_name: angular
+    build: ./angular
     volumes:
       - ./workDir/frontend:/var/www/frontend/:cached
     ports:
-      - "3000:3000"
+      - "4200:4200"
     environment:
       - CHOKIDAR_USEPOLLING=true
     networks:
       - network_infrastructure
-#    command: npm start
+    command: ng serve frontend --host 0.0.0.0 --port 4200
   spring:
     build: spring
     container_name: spring
@@ -25,34 +24,34 @@ services:
       - ./workDir/logs/:/var/log/nginx/:cached
     ports:
       - "8080:8080"
-  MongoDB:
-    image: mongo
-    container_name: mongo_database
+# MongoDB:
+  #   image: mongo
+  #   container_name: mongo_database
+  #   ports:
+  #     - "8081:8081"
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: p
+  #     MONGO_INITDB_DATABASE: mongoDb
+  #   volumes:
+  #     - /var/lib/mongodb/
+  #   networks:
+  #     - network_infrastructure
+  MySQLDB:
+    image: mysql
+    container_name: mysql_database
+    command: [ "--default-authentication-plugin=mysql_native_password" ]
     ports:
-      - "8081:8081"
+      - "3306:3306"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: p
-      MONGO_INITDB_DATABASE: mongoDb
+      MYSQL_ROOT_PASSWORD: p
+      MYSQL_DATABASE: mysqlDb
+      MYSQL_USER: mysqlDbUser
+      MYSQL_PASSWORD: p
     volumes:
-      - /var/lib/mongodb/
+      - /var/lib/mysql/
     networks:
       - network_infrastructure
-  #  MySQLDB:
-  #    image: mysql
-  #    container_name: mysql_database
-  #    command: [ "--default-authentication-plugin=mysql_native_password" ]
-  #    ports:
-  #      - "3306:3306"
-  #    environment:
-  #      MYSQL_ROOT_PASSWORD: p
-  #      MYSQL_DATABASE: mysqlDb
-  #      MYSQL_USER: mysqlDbUser
-  #      MYSQL_PASSWORD: p
-  #    volumes:
-  #      - /var/lib/mysql/
-  #    networks:
-  #      - network_infrastructure
   nginx:
     build: ./nginx
     container_name: nginx
@@ -60,7 +59,7 @@ services:
       - "80:80"
     links:
       - spring
-      - react
+      - angular
     volumes:
       - ./workDir/backend/:/home/spring:cached
       - ./workDir/frontend/:/var/www/frontend:cached

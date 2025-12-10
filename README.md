@@ -1,13 +1,13 @@
-# SpriNDAX! A fully comprehensive Java, React, Nginx, MongoDb or MySQL Docker container.
+# SpriNDAX! A fully comprehensive Java, Angular, Nginx, MongoDb or MySQL Docker container.
 
 ## Introduction
-The repo provides a complete React, Spring, Nginx and MongoDb or MySQL environment in Docker.
-SpriNDReXX stands for:
+The repo provides a complete Angular, Spring, Nginx and MongoDb or MySQL environment in Docker.
+SpriNDAX stands for:
 
 - **Spri**ng
 - **N**ginx
 - **D**ocker
-- **Re**act
+- **A**ngular
 - **X** is a variable and stands for the database MongoDb or MySQL
 
 Feel free to use the repo. I always try to keep the repo up to date.
@@ -30,17 +30,15 @@ If it is smaller than 2.0, then the command goes as follows: `docker-compose up 
 `git clone https://github.com/One-Type-Man/SpriNDReX.git`
 
 ### 1.2 Go in the project folder
-`cd SpriNDReX`
+`cd SpriNDAX`
 
 ### 1.3 Build the docker image:
 `docker-compose build` or `docker compose build`.
 
 ### 1.4 Start the containers
-But before you start the containers, the line "command: npm start" in the _docker-compose.yml_, is commented out. This is **important for the beginning**, otherwise the _React container_ will *not start*!
-The command will start the React project, but will immediately print an error message, because there is no _package.json_. Therefore we have to comment out the line first.
-Start the container:
-- Version **less** 2.0: `docker-compose up -d`
-- Version **greather** 2.0: `docker compose up -d`.
+But before you start the containers, the line "command: ng serve frontend --host 0.0.0.0 --port 4200" in the _docker-compose.yml_, is commented out. This is **important for the beginning**, otherwise the _Angular container_ will *not start*!
+The command will start the Angular project, but will immediately print an error message, because there is no _package.json_. Therefore we have to comment out the line first.
+Start the container: `docker compose up -d`.
 
 With `docker ps` you will have the following output:
 
@@ -48,25 +46,32 @@ With `docker ps` you will have the following output:
 > $ docker-compose ps
         Image ...     Ports                                                Names
 --------------------------------------------------------------------------------------------------
-sprindex_react         0.0.0.0:3000->3000/tcp, :::3000->3000/tcp           react
-sprindex_nginx         0.0.0.0:80->80/tcp, :::80->80/tcp, 9001/tcp         nginx
-sprindex_spring       0.0.0.0:8080->8080/tcp, :::8080->8080/tcp            spring
+sprindax_angular      0.0.0.0:3000->3000/tcp, :::4200->4200/tcp            angular
+sprindax_nginx        0.0.0.0:80->80/tcp, :::80->80/tcp, 9001/tcp          nginx
+sprindax_spring       0.0.0.0:8080->8080/tcp, :::8080->8080/tcp            spring
 mongo                 0.0.0.0:8081->8081/tcp, :::8081->8081/tcp, 27017/tcp mongo_database
 ```
 
-### 1.5 Initialize the React project.
-The recommended working directory is **/var/www/frontend** of the react container.
-Now, create the react project with following command:
-- `docker exec -it react sh /usr/share/scripts/initReactProject.sh`
+### 1.5 Initialize the Angular project.
+The recommended working directory is **/var/www/frontend** of the Angular container.
+Now, create the Angular project with following command:
+- `docker exec -it angular sh /usr/share/scripts/initAngularProject.sh`
 
 The working directory is declared as **:cached**, so you will find (after restarting all container in chapter 1.7) the new initialized project in **./workdir/frontend/**.
+
+Afterwards, please add following configuration in the angular.json:
+```json
+"options": {
+"allowedHosts": ["angular", "angular.localhost", "localhost"]
+},
+```
 
 ### 1.6 Get the Spring boot application
 1. Go to [Spring initializr](https://start.spring.io/).
 2. Set the project on **Maven** and language on **Java**
-3. Spring boot 2.7.4
+3. Choose your Spring boot version
 4. Change the project metadata or take the example data
-5. Take Java version 17
+5. Choose a Java version (Be careful! You need the same version like in the dockerfile in the folder spring!)
 6. Go to dependencies and add:
     - Spring Boot DevTools
     - Spring Web
@@ -75,11 +80,11 @@ The working directory is declared as **:cached**, so you will find (after restar
 9. Copy all files in the folder in the project **workDir/backend/**
 
 ### 1.7 Start the containers
-Start the containers with `docker-compose up -d` or `docker compose up -d`.
+Start the containers with `docker compose up -d`.
 
 ### 1.8 Try it!
 Open your browser and make sure everything worked.
-The React container can be accessed via the URL `http://react.localhost` and the Spring container via `http://spring.localhost`.
+The Angular container can be accessed via the URL `http://angular.localhost` and the Spring container via `http://spring.localhost`.
 
 ### 1.9 Do you need MySQL? Edit the docker-compose.yml
 If you need MySQl, comment out the section after "db", and enable the lines needed for the MySQL container.
@@ -99,7 +104,7 @@ The logs are cached and you will find them in project folder _workDir/logs_.
 - Command: `sudo chown -R $USER ./workDir/*`.
 
 #### How can I change the working directory of a Docker container?
-- Please make yourself familiar with the commands of [Docker](https://docs.docker.com/compose/). Use the respective "Dockerfile" for changes. But be careful! If you change the working directory, then you must also do it in the respective configuration files of the Nginx. The **react.conf** contains the working directory where Nginx will look for the React project!
+- Please make yourself familiar with the commands of [Docker](https://docs.docker.com/compose/). Use the respective "Dockerfile" for changes. But be careful! If you change the working directory, then you must also do it in the respective configuration files of the Nginx. The **angular.conf** contains the working directory where Nginx will look for the Angular project!
 
 
 # License
