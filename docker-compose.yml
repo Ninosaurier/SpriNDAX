@@ -1,7 +1,7 @@
 services:
   angular:
     stdin_open: true
-    container_name: angular
+    container_name: angular-sprindax-app
     build: ./angular
     volumes:
       - ./workDir/frontend:/var/www/frontend/:cached
@@ -10,15 +10,15 @@ services:
     environment:
       - CHOKIDAR_USEPOLLING=true
     networks:
-      - network_infrastructure
-    command: ng serve frontend --host 0.0.0.0 --port 4200
+      - sprindax-network
+    #command: ng serve frontend --host 0.0.0.0 --port 4200
   spring:
     build: spring
-    container_name: spring
+    container_name: spring-sprindax-app
     tty: true
     command: mvn spring-boot:run
     networks:
-      - network_infrastructure
+      - sprindax-network
     volumes:
       - ./workDir/backend:/home/spring/:cached
       - ./workDir/logs/:/var/log/nginx/:cached
@@ -38,10 +38,10 @@ services:
   #   volumes:
   #     - /var/lib/mongodb/
   #   networks:
-  #     - network_infrastructure
+  #     - sprindax-network
   MySQLDB:
     image: mysql
-    container_name: mysql_database
+    container_name: mysql-sprindax-db
     ports:
       - "3306:3306"
     environment:
@@ -52,10 +52,10 @@ services:
     volumes:
       - /var/lib/mysql/
     networks:
-      - network_infrastructure
+      - sprindax-network
   nginx:
     build: ./nginx
-    container_name: nginx
+    container_name: nginx-sprindax-app
     ports:
       - "80:80"
     links:
@@ -66,7 +66,7 @@ services:
       - ./workDir/frontend/:/var/www/frontend:cached
       - ./workDir/logs/:/var/log/nginx:cached
     networks:
-      - network_infrastructure
+      - sprindax-network
 networks:
-  network_infrastructure:
-    name: network_infrastructure
+  sprindax-network:
+    name: sprindax-network

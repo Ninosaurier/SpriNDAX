@@ -1,21 +1,27 @@
-FROM alpine:latest
+FROM alpine:latest AS builder
 
+ARG ANGULAR_PROJECT_NAME=sprindax_default_app
+
+RUN echo ${ANGULAR_PROJECT_NAME}
+
+ENV ANGULAR_PROJECT_NAME=${ANGULAR_PROJECT_NAME}
 ENV HELPER_SCRIPTS_FOLDER=/usr/share/scripts
-ENV ANGULAR_WEB_PATH=/var/www/frontend/
+ENV ANGULAR_WEB_PATH=/var/www/frontend
 
 WORKDIR ${ANGULAR_WEB_PATH}
 
+RUN apk add --update nodejs npm && \
+    npm install -g @angular/cli --force && \
+    npm install npm -g --force
+
 RUN mkdir -p -v ${HELPER_SCRIPTS_FOLDER}
-COPY initAngularProject.sh /usr/share/scripts
+COPY initAngularProject.sh ${HELPER_SCRIPTS_FOLDER}/
 
-## add `/app/node_modules/.bin` to $PATH
-#ENV PATH /var/www/react/node_modules/.bin:$PATH
-RUN apk add --update nodejs npm
-RUN npm install -g @angular/cli --force
-RUN npm install npm -g --force
+RUN chmod +x ${HELPER_SCRIPTS_FOLDER}/initAngularProject.sh
+RUN sh ${HELPER_SCRIPTS_FOLDER}/initAngularProject.sh
 
-# RUN npm install -g react-scripts
-#RUN npm install -g create-react-app
-#RUN npm cache clean --force
-
-EXPOSE 4200
+# FROM alpine:latest
+# RUN apk add --update nodejs npm
+# COPY --from=builder /var/www/frontend /var/www/frontend
+# WORKDIR /var/www/frontend/
+# EXPOSE 4200

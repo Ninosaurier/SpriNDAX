@@ -1,0 +1,9 @@
+# .gitignore
+.env
+.env.local
+
+workDir/logs/*
+
+.idea/
+*.iml
+.vscode

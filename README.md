@@ -11,18 +11,9 @@ SpriNDAX stands for:
 - **X** is a variable and stands for the database MongoDb or MySQL
 
 Feel free to use the repo. I always try to keep the repo up to date.
-Please bear with me as I don't have much experience with Git and Docker yet.
 
 The installation works for Linux. I do not know, if the installation works for the Windows subsystem.
 You are welcome to clone the repo and run it in Windows. I will gladly extend the description with a Windows chapter.
-
-## Preconditions
-
-### Check docker version
-Make sure which Docker version you are using. make sure which Docker version you are using.
-If your version is greater than 2.0, then start the containers with `docker compose up <parameters>`.
-
-If it is smaller than 2.0, then the command goes as follows: `docker-compose up <parameters>`. **Note the hyphen!**
 
 ## 1. Installation
 
@@ -32,7 +23,10 @@ If it is smaller than 2.0, then the command goes as follows: `docker-compose up 
 ### 1.2 Go in the project folder
 `cd SpriNDAX`
 
-### 1.3 Build the docker image:
+### 1.3 Create necessary files
+Add a .env for your local development. Docker will use it for the build. You can copy all necessary values from .env.example
+
+### 1.4 Build the docker image:
 `docker-compose build` or `docker compose build`.
 
 ### 1.4 Start the containers
@@ -49,7 +43,7 @@ With `docker ps` you will have the following output:
 sprindax_angular      0.0.0.0:3000->3000/tcp, :::4200->4200/tcp            angular
 sprindax_nginx        0.0.0.0:80->80/tcp, :::80->80/tcp, 9001/tcp          nginx
 sprindax_spring       0.0.0.0:8080->8080/tcp, :::8080->8080/tcp            spring
-mongo                 0.0.0.0:8081->8081/tcp, :::8081->8081/tcp, 27017/tcp mongo_database
+MySQL                 0.0.0.0:8081->8081/tcp, :::8081->8081/tcp, 27017/tcp mysql
 ```
 
 ### 1.5 Initialize the Angular project.
