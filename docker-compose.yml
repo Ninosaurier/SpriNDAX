@@ -11,7 +11,7 @@ services:
       - CHOKIDAR_USEPOLLING=true
     networks:
       - sprindax-network
-    #command: ng serve frontend --host 0.0.0.0 --port 4200
+    command: ng serve frontend --host 0.0.0.0 --port 4200
   spring:
     build: spring
     container_name: spring-sprindax-app
@@ -45,10 +45,10 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: p
+      MYSQL_ROOT_PASSWORD: ${ROOT_DB_PASSWORD}
       MYSQL_DATABASE: mysqlDb
       MYSQL_USER: mysqlDbUser
-      MYSQL_PASSWORD: p
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - /var/lib/mysql/
     networks:

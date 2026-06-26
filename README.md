@@ -1,7 +1,9 @@
 # SpriNDAX! A fully comprehensive Java, Angular, Nginx, MongoDb or MySQL Docker container.
 
 ## Introduction
-The repo provides a complete Angular, Spring, Nginx and MongoDb or MySQL environment in Docker.
+
+### Overview
+
 SpriNDAX stands for:
 
 - **Spri**ng
@@ -10,57 +12,28 @@ SpriNDAX stands for:
 - **A**ngular
 - **X** is a variable and stands for the database MongoDb or MySQL
 
+This repository serves as a **clean boilerplate template** for full-stack development. 
+Please note that upon cloning this repository, the project directories `workDir/backend` and `workDir/frontend` are **intentionally empty**. They act as placeholders. 
+
+Once you follow the installation and build steps below, the automated setup will generate a brand-new, fresh **Spring Boot** and **Angular** project inside these folders, giving you a clean slate to start building your application immediately.
+
 Feel free to use the repo. I always try to keep the repo up to date.
 
-The installation works for Linux. I do not know, if the installation works for the Windows subsystem.
-You are welcome to clone the repo and run it in Windows. I will gladly extend the description with a Windows chapter.
+## 2. Installation
 
-## 1. Installation
+### 2.1 Clone the project
+`git clone https://github.com/Ninosaurier/SpriNDAX.git`
 
-### 1.1 Clone the project
-`git clone https://github.com/One-Type-Man/SpriNDReX.git`
-
-### 1.2 Go in the project folder
+### 2.2 Go in the project folder
 `cd SpriNDAX`
 
-### 1.3 Create necessary files
+### 2.3 Create necessary files
 Add a .env for your local development. Docker will use it for the build. You can copy all necessary values from .env.example
 
-### 1.4 Build the docker image:
+### 2.4 Build the docker image:
 `docker-compose build` or `docker compose build`.
 
-### 1.4 Start the containers
-But before you start the containers, the line "command: ng serve frontend --host 0.0.0.0 --port 4200" in the _docker-compose.yml_, is commented out. This is **important for the beginning**, otherwise the _Angular container_ will *not start*!
-The command will start the Angular project, but will immediately print an error message, because there is no _package.json_. Therefore we have to comment out the line first.
-Start the container: `docker compose up -d`.
-
-With `docker ps` you will have the following output:
-
-```bash
-> $ docker-compose ps
-        Image ...     Ports                                                Names
---------------------------------------------------------------------------------------------------
-sprindax_angular      0.0.0.0:3000->3000/tcp, :::4200->4200/tcp            angular
-sprindax_nginx        0.0.0.0:80->80/tcp, :::80->80/tcp, 9001/tcp          nginx
-sprindax_spring       0.0.0.0:8080->8080/tcp, :::8080->8080/tcp            spring
-MySQL                 0.0.0.0:8081->8081/tcp, :::8081->8081/tcp, 27017/tcp mysql
-```
-
-### 1.5 Initialize the Angular project.
-The recommended working directory is **/var/www/frontend** of the Angular container.
-Now, create the Angular project with following command:
-- `docker exec -it angular sh /usr/share/scripts/initAngularProject.sh`
-
-The working directory is declared as **:cached**, so you will find (after restarting all container in chapter 1.7) the new initialized project in **./workdir/frontend/**.
-
-Afterwards, please add following configuration in the angular.json:
-```json
-"options": {
-"allowedHosts": ["angular", "angular.localhost", "localhost"]
-},
-```
-
-### 1.6 Get the Spring boot application
+### 2.5 Get the Spring boot application
 1. Go to [Spring initializr](https://start.spring.io/).
 2. Set the project on **Maven** and language on **Java**
 3. Choose your Spring boot version
@@ -73,26 +46,64 @@ Afterwards, please add following configuration in the angular.json:
 8. Unzip the file
 9. Copy all files in the folder in the project **workDir/backend/**
 
-### 1.7 Start the containers
+### 2.6 Start the containers
+But before you start the containers, the line "command: ng serve frontend --host 0.0.0.0 --port 4200" in the _docker-compose.yml_, is commented out. This is **important for the beginning**, otherwise the _Angular container_ will *not start*!
+The command will start the Angular project, but will immediately print an error message, because there is no _package.json_. Therefore we have to comment out the line first.
+Start the container: `docker compose up -d`.
+
+With `docker ps` you will have the following output:
+
+```bash
+> $ docker-compose ps
+        Image ...     Ports                                                Names
+--------------------------------------------------------------------------------------------------
+angular-sprindax-app      0.0.0.0:3000->3000/tcp, :::4200->4200/tcp            angular-sprindax-app
+nginx-sprindax-app        0.0.0.0:80->80/tcp,     :::80->80/tcp, 9001/tcp      nginx-sprindax-app
+spring-sprindax-app       0.0.0.0:8080->8080/tcp, :::8080->8080/tcp            spring-sprindax-app
+mysql                     0.0.0.0:8081->8081/tcp, :::8081->8081/tcp, 27017/tcp mysql-sprindax-db
+```
+
+## 3. Docker Environment Note: Invalid Host Header Fix
+
+When running the Angular development server inside Docker, you might encounter an `Invalid Host Header` error or connectivity issues between containers. 
+
+This happens because newer Angular versions include a security feature that blocks requests from unexpected hostnames (like the internal Docker service name or custom local domains).
+
+### 3.1 Solution
+
+To allow internal Docker communication and custom local domains, ensure that your `angular.json` includes the `allowedHosts` whitelist under the `serve` options:
+
+```json
+"options": {
+"allowedHosts": ["angular", "angular.localhost", "localhost"]
+},
+```
+
+*Alternative:* You can also bypass this check during development by starting the server with the `--disable-host-check` flag in your Docker commands:
+```bash
+ng serve --host 0.0.0.0 --disable-host-check
+```
+
+## 4. Start the containers
 Start the containers with `docker compose up -d`.
 
-### 1.8 Try it!
+## 5. Try it!
 Open your browser and make sure everything worked.
 The Angular container can be accessed via the URL `http://angular.localhost` and the Spring container via `http://spring.localhost`.
 
-### 1.9 Do you need MySQL? Edit the docker-compose.yml
+## 6. Do you need MySQL? Edit the docker-compose.yml
 If you need MySQl, comment out the section after "db", and enable the lines needed for the MySQL container.
 In the Spring section, you would then also have to activate the correct lines under "links". Of course you can also create a MongoDB and MySQL container.
 
-### Nginx logs
+## 7. Nginx logs
 The logs are cached and you will find them in project folder _workDir/logs_.
 
-## Useful Commands
+## 8. Useful Commands
 
 - Shows all running containers: `docker ps`
 - If you want to use the shell from the container itself: `docker exec -it <container_name> sh`
 
-## FAQ
+## 9. FAQ
 
 #### How can i change the user ownership? I can not edit files.
 - Command: `sudo chown -R $USER ./workDir/*`.
@@ -100,9 +111,26 @@ The logs are cached and you will find them in project folder _workDir/logs_.
 #### How can I change the working directory of a Docker container?
 - Please make yourself familiar with the commands of [Docker](https://docs.docker.com/compose/). Use the respective "Dockerfile" for changes. But be careful! If you change the working directory, then you must also do it in the respective configuration files of the Nginx. The **angular.conf** contains the working directory where Nginx will look for the Angular project!
 
+# 10. License
+MIT License
 
-# License
-Legally, I don't know if I can declare the repo with a GPL3 license.
+Copyright (c) 2026 Antonino Provenzano
 
-But definitely feel free to copy, modify or even improve the repo.
-I have one request: If you have any improvements, please let me know. Would love to include them too :)
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
