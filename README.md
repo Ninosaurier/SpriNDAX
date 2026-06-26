@@ -115,7 +115,7 @@ The logs are cached and you will find them in project folder **workDir/logs**
 
 - Please make yourself familiar with the commands of [Docker](https://docs.docker.com/compose/). Use the respective "Dockerfile" for changes. But be careful! If you change the working directory, then you must also do it in the respective configuration files of the Nginx. The **angular.conf** contains the working directory where Nginx will look for the Angular project!
 
-## 10. License
+## 9. License
 
 MIT License
 
