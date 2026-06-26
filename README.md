@@ -79,11 +79,13 @@ This happens because newer Angular versions include a security feature that bloc
 
 ### 3.1 Solution
 
-To allow internal Docker communication and custom local domains, ensure that your `angular.json` includes the `allowedHosts` whitelist under the `serve` options:
+To allow internal Docker communication and custom local domains, ensure that your `angular.json` includes the `allowedHosts` whitelist under the `serve`->`options`->`allowedHosts` options:
 
 ```json
 "options": {
-"allowedHosts": ["angular", "angular.localhost", "localhost"]
+    "allowedHosts": [
+        "angular"
+    ],
 },
 ```
 
