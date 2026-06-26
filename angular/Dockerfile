@@ -1,8 +1,6 @@
-FROM alpine:latest AS builder
+FROM alpine:latest
 
 ARG ANGULAR_PROJECT_NAME=sprindax_default_app
-
-RUN echo ${ANGULAR_PROJECT_NAME}
 
 ENV ANGULAR_PROJECT_NAME=${ANGULAR_PROJECT_NAME}
 ENV HELPER_SCRIPTS_FOLDER=/usr/share/scripts
@@ -20,8 +18,6 @@ COPY initAngularProject.sh ${HELPER_SCRIPTS_FOLDER}/
 RUN chmod +x ${HELPER_SCRIPTS_FOLDER}/initAngularProject.sh
 RUN sh ${HELPER_SCRIPTS_FOLDER}/initAngularProject.sh
 
-# FROM alpine:latest
-# RUN apk add --update nodejs npm
-# COPY --from=builder /var/www/frontend /var/www/frontend
-# WORKDIR /var/www/frontend/
-# EXPOSE 4200
+WORKDIR ${ANGULAR_WEB_PATH}
+
+EXPOSE 4200

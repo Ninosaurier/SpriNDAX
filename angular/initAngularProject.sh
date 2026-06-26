@@ -7,7 +7,7 @@ cd /tmp/frontend
 
 
 echo "Creating an Angular project"
-npx ng new "$ANGULAR_PROJECT_NAME" --defaults --skip-git --directory=.
+npx ng new "$ANGULAR_PROJECT_NAME" --directory .
 
 mv ./* /var/www/frontend/
 mv .[!.]* /var/www/frontend/ # Do not forget to copy hidden files!

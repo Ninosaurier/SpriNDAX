@@ -4,14 +4,14 @@ services:
     container_name: angular-sprindax-app
     build: ./angular
     volumes:
-      - ./workDir/frontend:/var/www/frontend/:cached
+      - angular_project_data:/var/www/frontend
     ports:
       - "4200:4200"
     environment:
       - CHOKIDAR_USEPOLLING=true
     networks:
       - sprindax-network
-    command: ng serve frontend --host 0.0.0.0 --port 4200
+    command: "ng serve --host 0.0.0.0 --port 4200"
   spring:
     build: spring
     container_name: spring-sprindax-app
@@ -70,3 +70,11 @@ services:
 networks:
   sprindax-network:
     name: sprindax-network
+
+volumes:
+  angular_project_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/workDir/frontend

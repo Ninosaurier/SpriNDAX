@@ -1,4 +1,4 @@
-# SpriNDAX! A fully comprehensive Java, Angular, Nginx, MongoDb or MySQL Docker container.
+# SpriNDAX! A fully comprehensive Java, Angular, Nginx, MongoDb or MySQL Docker container
 
 ## Introduction
 
@@ -12,8 +12,8 @@ SpriNDAX stands for:
 - **A**ngular
 - **X** is a variable and stands for the database MongoDb or MySQL
 
-This repository serves as a **clean boilerplate template** for full-stack development. 
-Please note that upon cloning this repository, the project directories `workDir/backend` and `workDir/frontend` are **intentionally empty**. They act as placeholders. 
+This repository serves as a **clean boilerplate template** for full-stack development.
+Please note that upon cloning this repository, the project directories `workDir/backend` and `workDir/frontend` are **intentionally empty**. They act as placeholders.
 
 Once you follow the installation and build steps below, the automated setup will generate a brand-new, fresh **Spring Boot** and **Angular** project inside these folders, giving you a clean slate to start building your application immediately.
 
@@ -22,40 +22,48 @@ Feel free to use the repo. I always try to keep the repo up to date.
 ## 2. Installation
 
 ### 2.1 Clone the project
+
 `git clone https://github.com/Ninosaurier/SpriNDAX.git`
 
+and change the origin url with your origin:
+
+`git remote set-url origin <Your-Repo-URL>`
+
 ### 2.2 Go in the project folder
-`cd SpriNDAX`
+
+Go to the project folder: `cd SpriNDAX`
 
 ### 2.3 Create necessary files
+
 Add a .env for your local development. Docker will use it for the build. You can copy all necessary values from .env.example
 
-### 2.4 Build the docker image:
-`docker-compose build` or `docker compose build`.
+### 2.4 Get the Spring boot application
 
-### 2.5 Get the Spring boot application
 1. Go to [Spring initializr](https://start.spring.io/).
 2. Set the project on **Maven** and language on **Java**
 3. Choose your Spring boot version
 4. Change the project metadata or take the example data
 5. Choose a Java version (Be careful! You need the same version like in the dockerfile in the folder spring!)
-6. Go to dependencies and add:
+6. Go to dependencies and add (Or other):
     - Spring Boot DevTools
     - Spring Web
 7. Generate and download it
 8. Unzip the file
 9. Copy all files in the folder in the project **workDir/backend/**
 
+### 2.5 Build the docker image
+
+Build the Docker-Images `docker compose build`.
+
 ### 2.6 Start the containers
-But before you start the containers, the line "command: ng serve frontend --host 0.0.0.0 --port 4200" in the _docker-compose.yml_, is commented out. This is **important for the beginning**, otherwise the _Angular container_ will *not start*!
-The command will start the Angular project, but will immediately print an error message, because there is no _package.json_. Therefore we have to comment out the line first.
+
 Start the container: `docker compose up -d`.
 
 With `docker ps` you will have the following output:
 
 ```bash
 > $ docker-compose ps
-        Image ...     Ports                                                Names
+Image ...                 Ports                                                Names
 --------------------------------------------------------------------------------------------------
 angular-sprindax-app      0.0.0.0:3000->3000/tcp, :::4200->4200/tcp            angular-sprindax-app
 nginx-sprindax-app        0.0.0.0:80->80/tcp,     :::80->80/tcp, 9001/tcp      nginx-sprindax-app
@@ -65,7 +73,7 @@ mysql                     0.0.0.0:8081->8081/tcp, :::8081->8081/tcp, 27017/tcp m
 
 ## 3. Docker Environment Note: Invalid Host Header Fix
 
-When running the Angular development server inside Docker, you might encounter an `Invalid Host Header` error or connectivity issues between containers. 
+When running the Angular development server inside Docker, you might encounter an `Invalid Host Header` error or connectivity issues between containers.
 
 This happens because newer Angular versions include a security feature that blocks requests from unexpected hostnames (like the internal Docker service name or custom local domains).
 
@@ -79,39 +87,36 @@ To allow internal Docker communication and custom local domains, ensure that you
 },
 ```
 
-*Alternative:* You can also bypass this check during development by starting the server with the `--disable-host-check` flag in your Docker commands:
-```bash
-ng serve --host 0.0.0.0 --disable-host-check
-```
+## 4. Try it
 
-## 4. Start the containers
-Start the containers with `docker compose up -d`.
-
-## 5. Try it!
 Open your browser and make sure everything worked.
 The Angular container can be accessed via the URL `http://angular.localhost` and the Spring container via `http://spring.localhost`.
 
-## 6. Do you need MySQL? Edit the docker-compose.yml
+## 5. Do you need MySQL? Edit the docker-compose.yml
+
 If you need MySQl, comment out the section after "db", and enable the lines needed for the MySQL container.
-In the Spring section, you would then also have to activate the correct lines under "links". Of course you can also create a MongoDB and MySQL container.
 
-## 7. Nginx logs
-The logs are cached and you will find them in project folder _workDir/logs_.
+## 6. Nginx logs
 
-## 8. Useful Commands
+The logs are cached and you will find them in project folder **workDir/logs**
+
+## 7. Useful Commands
 
 - Shows all running containers: `docker ps`
 - If you want to use the shell from the container itself: `docker exec -it <container_name> sh`
 
-## 9. FAQ
+## 8. FAQ
 
-#### How can i change the user ownership? I can not edit files.
+### How can i change the user ownership? I can not edit files
+
 - Command: `sudo chown -R $USER ./workDir/*`.
 
-#### How can I change the working directory of a Docker container?
+### How can I change the working directory of a Docker container?
+
 - Please make yourself familiar with the commands of [Docker](https://docs.docker.com/compose/). Use the respective "Dockerfile" for changes. But be careful! If you change the working directory, then you must also do it in the respective configuration files of the Nginx. The **angular.conf** contains the working directory where Nginx will look for the Angular project!
 
-# 10. License
+## 10. License
+
 MIT License
 
 Copyright (c) 2026 Antonino Provenzano
@@ -133,4 +138,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
